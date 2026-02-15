@@ -20,6 +20,7 @@
 	import NavUser from "./nav-user.svelte";
 	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
 	import type { ComponentProps } from "svelte";
+  import { StoreIcon } from "lucide-svelte";
 
 	const data = {
 		user: {
@@ -39,9 +40,9 @@
 				icon: UsersIcon,
 			},
 			{
-				title: "Lifecycle",
-				url: "#",
-				icon: ListDetailsIcon,
+				title: "Merchant",
+				url: "/merchant",
+				icon: StoreIcon,
 			},
 			{
 				title: "Analytics",

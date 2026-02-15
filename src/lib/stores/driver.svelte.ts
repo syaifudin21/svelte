@@ -1,5 +1,10 @@
 import { driverService } from "../services/driver.service";
-import type { Driver, DriverStatus, DriverSummary } from "../types/driver";
+import type {
+  Driver,
+  DriverStatus,
+  DriverSummary,
+  DriverDetailData,
+} from "../types/driver";
 
 export function createDriverStore() {
   let drivers = $state<Driver[]>([]);
@@ -13,12 +18,27 @@ export function createDriverStore() {
   let totalItems = $state(0);
   let totalPages = $state(0);
 
+  let driverDetail = $state<DriverDetailData | null>(null);
+
   async function fetchSummary() {
     try {
       const response = await driverService.getSummaryStatus();
       summary = response.data;
     } catch (err) {
       console.error("Failed to fetch driver summary", err);
+    }
+  }
+
+  async function fetchDriverDetail(uuid: string) {
+    isLoading = true;
+    error = null;
+    try {
+      const response = await driverService.getDriverDetail(uuid);
+      driverDetail = response.data;
+    } catch (err: any) {
+      error = err.response?.data?.message || "Failed to fetch driver details";
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -59,6 +79,9 @@ export function createDriverStore() {
     get drivers() {
       return drivers;
     },
+    get driverDetail() {
+      return driverDetail;
+    },
     get isLoading() {
       return isLoading;
     },
@@ -88,6 +111,7 @@ export function createDriverStore() {
     },
     fetchDrivers,
     fetchSummary,
+    fetchDriverDetail,
     setStatus(newStatus: DriverStatus) {
       status = newStatus;
       fetchDrivers(newStatus, search, 1);
@@ -99,6 +123,34 @@ export function createDriverStore() {
     setPage(newPage: number) {
       currentPage = newPage;
       fetchDrivers(status, search, newPage);
+    },
+    async approveDriver(uuid: string, notes: string[] = []) {
+      isLoading = true;
+      error = null;
+      try {
+        await driverService.approveDriver(uuid, notes);
+        await fetchDriverDetail(uuid);
+        return true;
+      } catch (err: any) {
+        error = err.response?.data?.message || "Failed to approve driver";
+        return false;
+      } finally {
+        isLoading = false;
+      }
+    },
+    async rejectDriver(uuid: string, notes: string[]) {
+      isLoading = true;
+      error = null;
+      try {
+        await driverService.rejectDriver(uuid, notes);
+        await fetchDriverDetail(uuid);
+        return true;
+      } catch (err: any) {
+        error = err.response?.data?.message || "Failed to reject driver";
+        return false;
+      } finally {
+        isLoading = false;
+      }
     },
   };
 }

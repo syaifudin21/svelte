@@ -23,12 +23,26 @@ export const driverService = {
   },
 
   async getDriverDetail(driverId: string): Promise<DriverDetailResponse> {
-    const response = await api.get(`/api/admin/driver/${driverId}`);
+    const response = await api.get(`/api/driver/${driverId}`);
     return response.data;
   },
 
   async getSummaryStatus(): Promise<DriverSummaryResponse> {
     const response = await api.get("/api/admin/driver/summary-status");
+    return response.data;
+  },
+
+  async approveDriver(driverId: string, notes: string[] = []) {
+    const response = await api.put(`/api/admin/driver/${driverId}/approved`, {
+      notes,
+    });
+    return response.data;
+  },
+
+  async rejectDriver(driverId: string, notes: string[]) {
+    const response = await api.put(`/api/admin/driver/${driverId}/rejected`, {
+      notes,
+    });
     return response.data;
   },
 };
