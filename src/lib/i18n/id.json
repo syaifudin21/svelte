@@ -48,7 +48,14 @@
         "all": "Semua",
         "submitted": "Diajukan",
         "approved": "Disetujui",
-        "rejected": "Ditolak"
+        "pending": "Menunggu",
+        "rejected": "Ditolak",
+        "step1": "Langkah Register",
+        "step2": "Langkah Akun",
+        "step3": "Langkah Kendaraan",
+        "step4": "Langkah Dokumen",
+        "step5": "Langkah Area Kerja",
+        "step6": "Langkah Bank"
     },
     "driver_detail": {
         "edit_profile": "Edit Profil",

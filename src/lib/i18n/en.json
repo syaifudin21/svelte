@@ -48,7 +48,14 @@
         "all": "All",
         "submitted": "Submitted",
         "approved": "Approved",
-        "rejected": "Rejected"
+        "rejected": "Rejected",
+        "pending": "Pending",
+        "step1": "Step Register",
+        "step2": "Step Account",
+        "step3": "Step Vehicle",
+        "step4": "Step Document",
+        "step5": "Step Work Area",
+        "step6": "Step Bank"
     },
     "driver_detail": {
         "edit_profile": "Edit Profile",

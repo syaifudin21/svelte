@@ -15,10 +15,6 @@
     });
 </script>
 
-<div class="flex items-center justify-between space-y-2 pt-4">
-    <h2 class="text-3xl font-bold tracking-tight">{uiStore.t("settings.title")}</h2>
-</div>
-
 <Tabs value="account" class="space-y-4">
     <TabsList>
         <TabsTrigger value="account">{uiStore.t("settings.account")}</TabsTrigger>

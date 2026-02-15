@@ -9,7 +9,26 @@ export interface PaginatedResponse<T> {
   message: string;
 }
 
-export type DriverStatus = "submitted" | "approved" | "rejected" | "all" | "";
+export type DriverStatus =
+  | "submitted"
+  | "approved"
+  | "rejected"
+  | "pending"
+  | "all"
+  | "";
+
+export interface DriverSummary {
+  approve: number;
+  submitted: number;
+  rejected: number;
+  pending: number;
+  total: number;
+}
+
+export interface DriverSummaryResponse {
+  data: DriverSummary;
+  message: string;
+}
 
 export interface Driver {
   uuid: string;

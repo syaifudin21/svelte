@@ -15,8 +15,15 @@
 	} from "lucide-svelte";
 	import { onMount } from "svelte";
 
+    let searchTerm = $state("");
+    let currentPage = $state(1);
+
 	onMount(() => {
-		driverStore.fetchDrivers();
+        const params = new URLSearchParams(window.location.search);
+        searchTerm = params.get("search") || "";
+        currentPage = parseInt(params.get("page") || "1");
+        
+		driverStore.fetchDrivers(undefined, searchTerm, currentPage);
 		uiStore.setBreadcrumbs([
 			{ label: uiStore.t("sidebar.dashboard"), href: "/dashboard" },
 			{ label: uiStore.t("driver.title") }
@@ -25,22 +32,43 @@
 
 	function handleStatusChange(value: string | undefined) {
 		driverStore.setStatus(value as DriverStatus);
+        updateUrl(searchTerm, 1);
 	}
+
+    function updateUrl(search: string, page: number) {
+        const url = new URL(window.location.href);
+        if (search) {
+            url.searchParams.set("search", search);
+        } else {
+            url.searchParams.delete("search");
+        }
+        
+        if (page > 1) {
+            url.searchParams.set("page", page.toString());
+        } else {
+            url.searchParams.delete("page");
+        }
+        window.history.replaceState({}, '', url);
+    }
 
     let searchTimer: ReturnType<typeof setTimeout>;
     function handleSearch(e: Event) {
         const value = (e.target as HTMLInputElement).value;
+        searchTerm = value;
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => {
             driverStore.setSearch(value);
+            updateUrl(value, 1);
         }, 500);
     }
 
-</script>
+    function handlePageChange(page: number) {
+        currentPage = page;
+        driverStore.setPage(page);
+        updateUrl(searchTerm, page);
+    }
 
-<div class="flex items-center justify-between">
-	<h2 class="text-3xl font-bold tracking-tight">{uiStore.t("driver.title")}</h2>
-</div>
+</script>
 
 <Card.Root>
 	<Card.Header>
@@ -51,10 +79,36 @@
 		<div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 			<Tabs value={driverStore.status || "all"} onValueChange={handleStatusChange} class="w-full md:w-auto">
 				<TabsList>
-					<TabsTrigger value="all">{uiStore.t("driver.all")}</TabsTrigger>
-					<TabsTrigger value="submitted">{uiStore.t("driver.submitted")}</TabsTrigger>
-					<TabsTrigger value="approved">{uiStore.t("driver.approved")}</TabsTrigger>
-					<TabsTrigger value="rejected">{uiStore.t("driver.rejected")}</TabsTrigger>
+					<TabsTrigger value="all">
+                        {uiStore.t("driver.all")}
+                        {#if driverStore.summary?.total}
+                            <span class="ml-1 text-xs text-muted-foreground">({driverStore.summary.total})</span>
+                        {/if}
+                    </TabsTrigger>
+					<TabsTrigger value="submitted">
+                        {uiStore.t("driver.submitted")}
+                        {#if driverStore.summary?.submitted}
+                            <span class="ml-1 text-xs text-muted-foreground">({driverStore.summary.submitted})</span>
+                        {/if}
+                    </TabsTrigger>
+					<TabsTrigger value="approved">
+                        {uiStore.t("driver.approved")}
+                        {#if driverStore.summary?.approve}
+                            <span class="ml-1 text-xs text-muted-foreground">({driverStore.summary.approve})</span>
+                        {/if}
+                    </TabsTrigger>
+                    <TabsTrigger value="pending">
+                        {uiStore.t("driver.pending")}
+                        {#if driverStore.summary?.pending}
+                            <span class="ml-1 text-xs text-muted-foreground">({driverStore.summary.pending})</span>
+                        {/if}
+                    </TabsTrigger>
+					<TabsTrigger value="rejected">
+                        {uiStore.t("driver.rejected")}
+                        {#if driverStore.summary?.rejected}
+                            <span class="ml-1 text-xs text-muted-foreground">({driverStore.summary.rejected})</span>
+                        {/if}
+                    </TabsTrigger>
 				</TabsList>
 			</Tabs>
 
@@ -64,6 +118,7 @@
 					type="search"
 					placeholder={uiStore.t("driver.search_placeholder")}
 					class="pl-8"
+                    value={searchTerm}
                     oninput={handleSearch}
 				/>
 			</div>
@@ -137,5 +192,45 @@
 				</Table.Body>
 			</Table.Root>
 		</div>
+
+		<div class="mt-4 flex items-center justify-between">
+            <div class="text-sm text-muted-foreground">
+                Showing {(driverStore.currentPage - 1) * driverStore.itemsPerPage + 1} to {Math.min(driverStore.currentPage * driverStore.itemsPerPage, driverStore.totalItems)} of {driverStore.totalItems} entries
+            </div>
+            <div class="flex items-center space-x-2">
+                <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onclick={() => handlePageChange(driverStore.currentPage - 1)}
+                    disabled={driverStore.currentPage === 1 || driverStore.isLoading}
+                >
+                    Previous
+                </Button>
+                <div class="flex items-center gap-1">
+                    {#each Array.from({ length: Math.min(5, driverStore.totalPages) }, (_, i) => {
+                        const start = Math.max(1, Math.min(driverStore.currentPage - 2, driverStore.totalPages - 4));
+                        return start + i;
+                    }) as page}
+                        <Button 
+                            variant={driverStore.currentPage === page ? "default" : "outline"} 
+                            size="sm"
+                            class="h-8 w-8 p-0"
+                            onclick={() => handlePageChange(page)}
+                            disabled={driverStore.isLoading}
+                        >
+                            {page}
+                        </Button>
+                    {/each}
+                </div>
+                <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onclick={() => handlePageChange(driverStore.currentPage + 1)}
+                    disabled={driverStore.currentPage === driverStore.totalPages || driverStore.isLoading}
+                >
+                    Next
+                </Button>
+            </div>
+        </div>
 	</Card.Content>
 </Card.Root>

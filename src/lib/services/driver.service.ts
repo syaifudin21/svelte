@@ -2,6 +2,7 @@ import type {
   DriverListResponse,
   WalletResponse,
   DriverDetailResponse,
+  DriverSummaryResponse,
 } from "../types/driver";
 import api from "./api";
 
@@ -23,6 +24,11 @@ export const driverService = {
 
   async getDriverDetail(driverId: string): Promise<DriverDetailResponse> {
     const response = await api.get(`/api/admin/driver/${driverId}`);
+    return response.data;
+  },
+
+  async getSummaryStatus(): Promise<DriverSummaryResponse> {
+    const response = await api.get("/api/admin/driver/summary-status");
     return response.data;
   },
 };

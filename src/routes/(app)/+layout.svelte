@@ -12,6 +12,8 @@
   <AppSidebar variant="inset" />
   <Sidebar.Inset>
     <SiteHeader />
-    {@render children()}
+    <div class="m-6">
+      {@render children()}
+    </div>
   </Sidebar.Inset>
 </Sidebar.Provider>
