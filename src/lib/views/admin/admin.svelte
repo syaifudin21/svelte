@@ -6,8 +6,8 @@
   import { Badge } from "$lib/components/ui/badge";
   import * as Avatar from "$lib/components/ui/avatar";
   import { Tabs, TabsList, TabsTrigger } from "$lib/components/ui/tabs";
-  import { driverStore } from "$lib/stores/driver.svelte";
-  import type { DriverStatus } from "$lib/types/driver";
+  import { adminStore } from "$lib/stores/admin.svelte";
+  import type { AdminStatus } from "$lib/types/admin";
   import { uiStore } from "$lib/stores/ui.svelte";
   import { Search, MoreHorizontal, RefreshCw } from "lucide-svelte";
   import { onMount } from "svelte";
@@ -20,15 +20,15 @@
     searchTerm = params.get("search") || "";
     currentPage = parseInt(params.get("page") || "1");
 
-    driverStore.fetchDrivers(undefined, searchTerm, currentPage);
+    adminStore.fetchAdmins(undefined, searchTerm, currentPage);
     uiStore.setBreadcrumbs([
       { label: uiStore.t("sidebar.dashboard"), href: "/dashboard" },
-      { label: uiStore.t("driver.title") },
+      { label: uiStore.t("sidebar.admin") || "Admin" },
     ]);
   });
 
   function handleStatusChange(value: string | undefined) {
-    driverStore.setStatus(value as DriverStatus);
+    adminStore.setStatus(value as AdminStatus);
     updateUrl(searchTerm, 1);
   }
 
@@ -54,14 +54,14 @@
     searchTerm = value;
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
-      driverStore.setSearch(value);
+      adminStore.setSearch(value);
       updateUrl(value, 1);
     }, 500);
   }
 
   function handlePageChange(page: number) {
     currentPage = page;
-    driverStore.setPage(page);
+    adminStore.setPage(page);
     updateUrl(searchTerm, page);
   }
 </script>
@@ -69,8 +69,13 @@
 <Card.Root>
   <Card.Header class="flex flex-row items-center justify-between px-7">
     <div>
-      <Card.Title>{uiStore.t("driver.management")}</Card.Title>
-      <Card.Description>{uiStore.t("driver.desc")}</Card.Description>
+      <Card.Title
+        >{uiStore.t("admin.management") || "Admin Management"}</Card.Title
+      >
+      <Card.Description
+        >{uiStore.t("admin.desc") ||
+          "Manage administrative users and their status."}</Card.Description
+      >
     </div>
   </Card.Header>
   <Card.Content>
@@ -78,48 +83,48 @@
       class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
     >
       <Tabs
-        value={driverStore.status || "all"}
+        value={adminStore.status || "all"}
         onValueChange={handleStatusChange}
         class="w-full md:w-auto"
       >
         <TabsList>
           <TabsTrigger value="all">
-            {uiStore.t("driver.all")}
-            {#if driverStore.summary?.total}
+            {uiStore.t("admin.all") || "All"}
+            {#if adminStore.summary?.total}
               <span class="ml-1 text-xs text-muted-foreground"
-                >({driverStore.summary.total})</span
+                >({adminStore.summary.total})</span
               >
             {/if}
           </TabsTrigger>
           <TabsTrigger value="submitted">
-            {uiStore.t("driver.submitted")}
-            {#if driverStore.summary?.submitted}
+            {uiStore.t("admin.submitted") || "Submitted"}
+            {#if adminStore.summary?.submitted}
               <span class="ml-1 text-xs text-muted-foreground"
-                >({driverStore.summary.submitted})</span
+                >({adminStore.summary.submitted})</span
               >
             {/if}
           </TabsTrigger>
           <TabsTrigger value="approved">
-            {uiStore.t("driver.approved")}
-            {#if driverStore.summary?.approve}
+            {uiStore.t("admin.approved") || "Approved"}
+            {#if adminStore.summary?.approve}
               <span class="ml-1 text-xs text-muted-foreground"
-                >({driverStore.summary.approve})</span
+                >({adminStore.summary.approve})</span
               >
             {/if}
           </TabsTrigger>
           <TabsTrigger value="pending">
-            {uiStore.t("driver.pending")}
-            {#if driverStore.summary?.pending}
+            {uiStore.t("admin.pending") || "Pending"}
+            {#if adminStore.summary?.pending}
               <span class="ml-1 text-xs text-muted-foreground"
-                >({driverStore.summary.pending})</span
+                >({adminStore.summary.pending})</span
               >
             {/if}
           </TabsTrigger>
           <TabsTrigger value="rejected">
-            {uiStore.t("driver.rejected")}
-            {#if driverStore.summary?.rejected}
+            {uiStore.t("admin.rejected") || "Rejected"}
+            {#if adminStore.summary?.rejected}
               <span class="ml-1 text-xs text-muted-foreground"
-                >({driverStore.summary.rejected})</span
+                >({adminStore.summary.rejected})</span
               >
             {/if}
           </TabsTrigger>
@@ -132,7 +137,8 @@
         />
         <Input
           type="search"
-          placeholder={uiStore.t("driver.search_placeholder")}
+          placeholder={uiStore.t("admin.search_placeholder") ||
+            "Search admin..."}
           class="pl-8"
           value={searchTerm}
           oninput={handleSearch}
@@ -140,73 +146,70 @@
       </div>
     </div>
 
-    {#if driverStore.isLoading && driverStore.drivers.length === 0}
+    {#if adminStore.isLoading && adminStore.admins.length === 0}
       <div class="flex h-[400px] items-center justify-center">
         <RefreshCw class="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
-    {:else if driverStore.error}
+    {:else if adminStore.error}
       <div class="flex h-[400px] flex-col items-center justify-center gap-4">
-        <p class="text-destructive">{driverStore.error}</p>
-        <Button onclick={() => driverStore.fetchDrivers()}>Coba Lagi</Button>
+        <p class="text-destructive">{adminStore.error}</p>
+        <Button onclick={() => adminStore.fetchAdmins()}>Coba Lagi</Button>
       </div>
     {:else}
       <Table.Root>
         <Table.Header>
           <Table.Row>
-            <Table.Head>{uiStore.t("sidebar.driver")}</Table.Head>
-            <Table.Head>{uiStore.t("driver.phone")}</Table.Head>
-            <Table.Head>{uiStore.t("driver.plate")}</Table.Head>
+            <Table.Head>{uiStore.t("admin.name") || "Name"}</Table.Head>
+            <Table.Head>{uiStore.t("admin.email") || "Email"}</Table.Head>
             <Table.Head>{uiStore.t("dashboard.status")}</Table.Head>
             <Table.Head class="text-right"
-              >{uiStore.t("driver.actions")}</Table.Head
+              >{uiStore.t("admin.actions") || "Actions"}</Table.Head
             >
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {#if driverStore.drivers.length === 0}
+          {#if adminStore.admins.length === 0}
             <Table.Row>
-              <Table.Cell colspan={5} class="h-24 text-center">
-                {uiStore.t("driver.no_data")}
+              <Table.Cell colspan={4} class="h-24 text-center">
+                {uiStore.t("admin.no_data") || "No data available"}
               </Table.Cell>
             </Table.Row>
           {:else}
-            {#each driverStore.drivers as driver}
+            {#each adminStore.admins as admin}
               <Table.Row>
                 <Table.Cell>
-                  <a
-                    href="/driver/{driver.uuid}"
-                    class="flex items-center gap-3 hover:underline"
-                  >
+                  <div class="flex items-center gap-3">
                     <Avatar.Root class="h-9 w-9">
                       <Avatar.Fallback
-                        >{driver.full_name?.charAt(0) || "D"}</Avatar.Fallback
+                        >{admin.name?.charAt(0) || "A"}</Avatar.Fallback
                       >
                     </Avatar.Root>
                     <div class="grid gap-0.5">
-                      <div class="font-medium">{driver.full_name}</div>
+                      <div class="font-medium">{admin.name}</div>
                       <div class="text-xs text-muted-foreground">
-                        {driver.username}
+                        {admin.username}
                       </div>
                     </div>
-                  </a>
+                  </div>
                 </Table.Cell>
-                <Table.Cell>{driver.phone_number}</Table.Cell>
-                <Table.Cell>{driver.plate_number}</Table.Cell>
+                <Table.Cell>{admin.email || "-"}</Table.Cell>
                 <Table.Cell>
                   <Badge
-                    variant={driver.status === "approved"
+                    variant={admin.status === "approved"
                       ? "default"
-                      : driver.status === "rejected"
+                      : admin.status === "rejected"
                         ? "destructive"
                         : "secondary"}
                   >
-                    {uiStore.t(`driver.${driver.status}`) || driver.status}
+                    {uiStore.t(`admin.status_${admin.status}`) || admin.status}
                   </Badge>
                 </Table.Cell>
                 <Table.Cell class="text-right">
                   <Button variant="ghost" size="icon">
                     <MoreHorizontal class="h-4 w-4" />
-                    <span class="sr-only">{uiStore.t("driver.actions")}</span>
+                    <span class="sr-only"
+                      >{uiStore.t("admin.actions") || "Actions"}</span
+                    >
                   </Button>
                 </Table.Cell>
               </Table.Row>
@@ -217,34 +220,34 @@
 
       <div class="mt-4 flex items-center justify-between">
         <div class="text-sm text-muted-foreground">
-          Showing {(driverStore.currentPage - 1) * driverStore.itemsPerPage + 1}
-          to {Math.min(
-            driverStore.currentPage * driverStore.itemsPerPage,
-            driverStore.totalItems,
-          )} of {driverStore.totalItems} entries
+          Showing {(adminStore.currentPage - 1) * adminStore.itemsPerPage + 1} to
+          {Math.min(
+            adminStore.currentPage * adminStore.itemsPerPage,
+            adminStore.totalItems,
+          )} of {adminStore.totalItems} entries
         </div>
         <div class="flex items-center space-x-2">
           <Button
             variant="outline"
             size="sm"
-            onclick={() => handlePageChange(driverStore.currentPage - 1)}
-            disabled={driverStore.currentPage === 1 || driverStore.isLoading}
+            onclick={() => handlePageChange(adminStore.currentPage - 1)}
+            disabled={adminStore.currentPage === 1 || adminStore.isLoading}
           >
             Previous
           </Button>
           <div class="flex items-center gap-1">
-            {#each Array.from( { length: Math.min(5, driverStore.totalPages) }, (_, i) => {
-                const start = Math.max(1, Math.min(driverStore.currentPage - 2, driverStore.totalPages - 4));
+            {#each Array.from( { length: Math.min(5, adminStore.totalPages) }, (_, i) => {
+                const start = Math.max(1, Math.min(adminStore.currentPage - 2, adminStore.totalPages - 4));
                 return Math.max(1, start + i);
-              }, ).filter((v, i, a) => a.indexOf(v) === i && v <= driverStore.totalPages) as page}
+              }, ).filter((v, i, a) => a.indexOf(v) === i && v <= adminStore.totalPages) as page}
               <Button
-                variant={driverStore.currentPage === page
+                variant={adminStore.currentPage === page
                   ? "default"
                   : "outline"}
                 size="sm"
                 class="h-8 w-8 p-0"
                 onclick={() => handlePageChange(page)}
-                disabled={driverStore.isLoading}
+                disabled={adminStore.isLoading}
               >
                 {page}
               </Button>
@@ -253,9 +256,9 @@
           <Button
             variant="outline"
             size="sm"
-            onclick={() => handlePageChange(driverStore.currentPage + 1)}
-            disabled={driverStore.currentPage === driverStore.totalPages ||
-              driverStore.isLoading}
+            onclick={() => handlePageChange(adminStore.currentPage + 1)}
+            disabled={adminStore.currentPage === adminStore.totalPages ||
+              adminStore.isLoading}
           >
             Next
           </Button>
