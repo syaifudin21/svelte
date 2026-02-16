@@ -23,7 +23,7 @@ export const driverService = {
   },
 
   async getDriverDetail(driverId: string): Promise<DriverDetailResponse> {
-    const response = await api.get(`/api/driver/${driverId}`);
+    const response = await api.get(`/api/admin/driver/${driverId}`);
     return response.data;
   },
 

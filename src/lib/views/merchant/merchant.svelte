@@ -15,6 +15,7 @@
     Store
   } from "lucide-svelte";
   import { onMount } from "svelte";
+  import { replaceState } from "$app/navigation";
 
   let searchTerm = $state("");
   let currentPage = $state(1);
@@ -49,7 +50,7 @@
     } else {
       url.searchParams.delete("page");
     }
-    window.history.replaceState({}, '', url);
+    replaceState(url.pathname + url.search, {});
   }
 
   let searchTimer: ReturnType<typeof setTimeout>;

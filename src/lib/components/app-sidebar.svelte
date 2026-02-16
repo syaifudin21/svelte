@@ -45,6 +45,11 @@
 				icon: StoreIcon,
 			},
 			{
+				title: "Tarif",
+				url: "/tariff",
+				icon: ListDetailsIcon,
+			},
+			{
 				title: "Analytics",
 				url: "#",
 				icon: ChartBarIcon,
