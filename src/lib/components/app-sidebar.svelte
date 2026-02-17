@@ -57,13 +57,33 @@
       },
       {
         title: "Merchant",
-        url: "/merchant",
+        url: "#",
         icon: StoreIcon,
+        items: [
+          {
+            title: "Merchant Nearby",
+            url: "/merchant/nearby",
+          },
+          {
+            title: "List Merchant",
+            url: "/merchant",
+          },
+        ],
       },
       {
         title: "Tarif",
-        url: "/tariff",
+        url: "#",
         icon: ListDetailsIcon,
+        items: [
+          {
+            title: "Daftar Tarif",
+            url: "/tariff",
+          },
+          {
+            title: "Cek Tarif",
+            url: "/tariff/check",
+          },
+        ],
       },
       {
         title: "Analytics",

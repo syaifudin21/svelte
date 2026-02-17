@@ -1,5 +1,10 @@
 import api from "./api";
-import type { TariffResponse, TariffFormData } from "../types/tariff";
+import type {
+  TariffResponse,
+  TariffFormData,
+  IncentiveRequest,
+  PricingPreviewResponse,
+} from "../types/tariff";
 
 export const tariffService = {
   async getTariffs(params?: {
@@ -26,6 +31,20 @@ export const tariffService = {
 
   async saveTariff(data: TariffFormData): Promise<any> {
     const response = await api.post("/api/admin/tariffs", data);
+    return response.data;
+  },
+
+  async updateIncentive(data: IncentiveRequest): Promise<any> {
+    const response = await api.put("/api/admin/tariffs/incentive", data);
+    return response.data;
+  },
+
+  async getPricingPreview(params: {
+    regency_id: string;
+    distance_km: number;
+    service_id: number;
+  }): Promise<PricingPreviewResponse> {
+    const response = await api.get("/api/pricing/preview", { params });
     return response.data;
   },
 };

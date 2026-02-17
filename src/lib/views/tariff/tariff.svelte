@@ -5,6 +5,7 @@
   import { Badge } from "$lib/components/ui/badge";
   import * as Select from "$lib/components/ui/select";
   import TariffDialog from "$lib/components/tariff-dialog.svelte";
+  import TariffIncentiveDialog from "$lib/components/tariff-incentive-dialog.svelte";
   import { tariffStore } from "$lib/stores/tariff.svelte";
   import { tariffService } from "$lib/services/tariff.service";
   import {
@@ -15,7 +16,7 @@
   import type { Tariff } from "$lib/types/tariff";
   import { onMount } from "svelte";
   import { goto, replaceState } from "$app/navigation";
-  import { RefreshCw, Filter, Pencil } from "lucide-svelte";
+  import { RefreshCw, Filter, Pencil, Zap } from "lucide-svelte";
 
   let services = $state<Service[]>([]);
   let regencies = $state<Regency[]>([]);
@@ -198,6 +199,8 @@
             <Table.Head>Commission</Table.Head>
             <Table.Head>Max Distance</Table.Head>
             <Table.Head>Driver Radius</Table.Head>
+            <Table.Head>Incentive</Table.Head>
+            <Table.Head class="text-right">Actions</Table.Head>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -237,6 +240,30 @@
               </Table.Cell>
               <Table.Cell>{tariff.max_distance_km} km</Table.Cell>
               <Table.Cell>{tariff.driver_radius_km} km</Table.Cell>
+              <Table.Cell>
+                {#if tariff.has_incentive}
+                  <div class="flex flex-col">
+                    <span class="font-bold text-yellow-600">
+                      {formatCurrency(tariff.incentive_fee)}
+                    </span>
+                    {#if tariff.incentive_expires_at}
+                      <span class="text-[10px] text-muted-foreground">
+                        Exp: {new Date(
+                          tariff.incentive_expires_at,
+                        ).toLocaleString("id-ID")}
+                      </span>
+                    {/if}
+                  </div>
+                {:else}
+                  <span class="text-muted-foreground">-</span>
+                {/if}
+              </Table.Cell>
+              <Table.Cell class="text-right">
+                <TariffIncentiveDialog
+                  {tariff}
+                  onSuccess={() => tariffStore.fetchTariffs()}
+                />
+              </Table.Cell>
             </Table.Row>
           {/each}
         </Table.Body>
