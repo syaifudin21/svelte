@@ -90,16 +90,6 @@
         url: "#",
         icon: ChartBarIcon,
       },
-      {
-        title: "Projects",
-        url: "#",
-        icon: FolderIcon,
-      },
-      {
-        title: "Team",
-        url: "#",
-        icon: UsersIcon,
-      },
     ],
     navClouds: [
       {
@@ -157,7 +147,7 @@
       },
       {
         title: "Get Help",
-        url: "#",
+        url: "/help",
         icon: HelpIcon,
       },
       {
@@ -169,18 +159,13 @@
     documents: [
       {
         name: "Data Library",
-        url: "#",
+        url: "/data-library",
         icon: DatabaseIcon,
       },
       {
         name: "Reports",
         url: "#",
         icon: ReportIcon,
-      },
-      {
-        name: "Word Assistant",
-        url: "#",
-        icon: FileWordIcon,
       },
     ],
   };

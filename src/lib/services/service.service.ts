@@ -6,6 +6,13 @@ export const serviceService = {
     const response = await api.get("/api/services");
     return response.data;
   },
+
+  async updateStatus(id: number, isAvailable: boolean): Promise<any> {
+    const response = await api.put(`/api/services/${id}/status`, {
+      is_available: isAvailable,
+    });
+    return response.data;
+  },
 };
 
 export const regencyService = {

@@ -18,3 +18,25 @@ export interface RegencyOptionResponse {
   data: RegencyOption[];
   message: string;
 }
+
+export interface District {
+  id: string;
+  regency_id: string;
+  name: string;
+}
+
+export interface DistrictResponse {
+  data: District[];
+  message: string;
+}
+
+export interface Village {
+  id: string;
+  district_id: string;
+  name: string;
+}
+
+export interface VillageResponse {
+  data: Village[];
+  message: string;
+}

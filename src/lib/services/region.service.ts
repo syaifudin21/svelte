@@ -1,5 +1,10 @@
 import api from "./api";
-import type { ProvinceResponse, RegencyOptionResponse } from "../types/region";
+import type {
+  ProvinceResponse,
+  RegencyOptionResponse,
+  DistrictResponse,
+  VillageResponse,
+} from "../types/region";
 
 export const regionService = {
   async getProvinces(): Promise<ProvinceResponse> {
@@ -11,6 +16,25 @@ export const regionService = {
     provinceId: string,
   ): Promise<RegencyOptionResponse> {
     const response = await api.get(`/api/regions/${provinceId}`);
+    return response.data;
+  },
+
+  async getDistricts(
+    provinceId: string,
+    regencyId: string,
+  ): Promise<DistrictResponse> {
+    const response = await api.get(`/api/regions/${provinceId}/${regencyId}`);
+    return response.data;
+  },
+
+  async getVillages(
+    provinceId: string,
+    regencyId: string,
+    districtId: string,
+  ): Promise<VillageResponse> {
+    const response = await api.get(
+      `/api/regions/${provinceId}/${regencyId}/${districtId}`,
+    );
     return response.data;
   },
 };
