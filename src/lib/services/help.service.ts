@@ -36,4 +36,20 @@ export const helpService = {
     const response = await api.delete(`/api/help/admin/categories/${id}`);
     return response.data;
   },
+
+  // Admin FAQs
+  async createFAQ(data: any): Promise<any> {
+    const response = await api.post("/api/help/admin/faqs", data);
+    return response.data;
+  },
+
+  async updateFAQ(id: number, data: any): Promise<any> {
+    const response = await api.put(`/api/help/admin/faqs/${id}`, data);
+    return response.data;
+  },
+
+  async deleteFAQ(id: number): Promise<any> {
+    const response = await api.delete(`/api/help/admin/faqs/${id}`);
+    return response.data;
+  },
 };

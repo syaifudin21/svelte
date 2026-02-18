@@ -34,14 +34,23 @@ class HelpStore {
   async selectCategory(id: number) {
     this.selectedCategory = id;
     this.searchQuery = ""; // Clear search when selecting category
-    this.isLoading = true;
-    try {
-      const res = await helpService.getFAQs(id);
-      this.faqs = res.data;
-    } catch (error) {
-      console.error("Failed to fetch FAQs:", error);
-    } finally {
-      this.isLoading = false;
+    await this.fetchFAQsForSelectedCategory();
+  }
+
+  // Helper to re-fetch FAQs for the current selected category
+  async fetchFAQsForSelectedCategory() {
+    if (this.selectedCategory !== null) {
+      this.isLoading = true;
+      try {
+        const res = await helpService.getFAQs(this.selectedCategory);
+        this.faqs = res.data;
+      } catch (error) {
+        console.error("Failed to fetch FAQs:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    } else {
+      this.faqs = []; // Clear FAQs if no category is selected
     }
   }
 
@@ -74,6 +83,22 @@ class HelpStore {
     await helpService.deleteCategory(id);
     if (this.selectedCategory === id) this.selectedCategory = null;
     await this.fetchCategories();
+  }
+
+  // Admin functions for FAQs
+  async createFAQ(data: any) {
+    await helpService.createFAQ(data);
+    await this.fetchFAQsForSelectedCategory(); // Refresh FAQs after creation
+  }
+
+  async updateFAQ(id: number, data: any) {
+    await helpService.updateFAQ(id, data);
+    await this.fetchFAQsForSelectedCategory(); // Refresh FAQs after update
+  }
+
+  async deleteFAQ(id: number) {
+    await helpService.deleteFAQ(id);
+    await this.fetchFAQsForSelectedCategory(); // Refresh FAQs after deletion
   }
 }
 

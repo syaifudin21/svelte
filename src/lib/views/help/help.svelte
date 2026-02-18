@@ -43,6 +43,17 @@
     is_active: true,
   });
 
+  // FAQ Dialog state and form
+  let isFAQDialogOpen = $state(false);
+  let faqDialogMode = $state<"create" | "edit">("create");
+  let editingFAQId = $state<number | null>(null);
+  let faqFormData = $state({
+    category_id: helpStore.selectedCategory,
+    question: "",
+    answer: "",
+    display_order: 1,
+  });
+
   const iconMap: Record<string, any> = {
     user: User,
     car: Car,
@@ -104,14 +115,60 @@
     }
   }
 
-  async function deleteCategory(id: number, e: MouseEvent) {
-    e.stopPropagation();
-    if (!confirm("Apakah Anda yakin ingin menghapus kategori ini?")) return;
+  // FAQ Functions
+  function openCreateFAQDialog() {
+    if (helpStore.selectedCategory === null) {
+      alert("Pilih kategori terlebih dahulu untuk membuat FAQ.");
+      return;
+    }
+    faqDialogMode = "create";
+    editingFAQId = null;
+    faqFormData = {
+      category_id: helpStore.selectedCategory,
+      question: "",
+      answer: "",
+      display_order: helpStore.faqs.length + 1,
+    };
+    isFAQDialogOpen = true;
+  }
+
+  function openEditFAQDialog(faq: FAQ, e: MouseEvent) {
+    e.stopPropagation(); // Avoid Accordion item click
+    faqDialogMode = "edit";
+    editingFAQId = faq.id;
+    faqFormData = {
+      category_id: faq.category_id,
+      question: faq.question,
+      answer: faq.answer,
+      display_order: faq.display_order,
+    };
+    isFAQDialogOpen = true;
+  }
+
+  async function handleFAQSubmit() {
+    isSubmitting = true;
+    try {
+      if (faqDialogMode === "create") {
+        await helpStore.createFAQ(faqFormData);
+      } else if (editingFAQId) {
+        await helpStore.updateFAQ(editingFAQId, faqFormData);
+      }
+      isFAQDialogOpen = false;
+    } catch (error) {
+      console.error("Failed to save FAQ:", error);
+    } finally {
+      isSubmitting = false;
+    }
+  }
+
+  async function deleteFAQ(id: number, e: MouseEvent) {
+    e.stopPropagation(); // Avoid Accordion item click
+    if (!confirm("Apakah Anda yakin ingin menghapus FAQ ini?")) return;
 
     try {
-      await helpStore.deleteCategory(id);
+      await helpStore.deleteFAQ(id);
     } catch (error) {
-      console.error("Failed to delete category:", error);
+      console.error("Failed to delete FAQ:", error);
     }
   }
 </script>
@@ -190,7 +247,7 @@
             size="icon"
             variant="destructive"
             class="size-8"
-            onclick={(e) => deleteCategory(item.id, e)}
+            onclick={(e) => helpStore.deleteCategory(item.id, e)}
           >
             <Trash2 class="size-4" />
           </Button>
@@ -267,18 +324,79 @@
     </Dialog.Content>
   </Dialog.Root>
 
+  <!-- FAQ Dialog -->
+  <Dialog.Root bind:open={isFAQDialogOpen}>
+    <Dialog.Content class="sm:max-w-[500px]">
+      <Dialog.Header>
+        <Dialog.Title
+          >{faqDialogMode === "create" ? "Tambah" : "Edit"} FAQ</Dialog.Title
+        >
+        <Dialog.Description>
+          Isi detail pertanyaan dan jawaban FAQ di bawah ini.
+        </Dialog.Description>
+      </Dialog.Header>
+
+      <div class="grid gap-4 py-4">
+        <div class="grid gap-2">
+          <Label for="faq-category">Kategori</Label>
+          <!-- Simplified category selection for now, ideally use a Select component -->
+          <Input id="faq-category" bind:value={faqFormData.category_id} type="number" disabled />
+        </div>
+        <div class="grid gap-2">
+          <Label for="faq-question">Pertanyaan</Label>
+          <Input
+            id="faq-question"
+            bind:value={faqFormData.question}
+            placeholder="Contoh: Bagaimana cara memesan?"
+          />
+        </div>
+        <div class="grid gap-2">
+          <Label for="faq-answer">Jawaban</Label>
+          <Textarea
+            id="faq-answer"
+            bind:value={faqFormData.answer}
+            placeholder="Berikan jawaban lengkap untuk pertanyaan..."
+          />
+        </div>
+        <div class="grid gap-2">
+          <Label for="faq-order">Urutan Tampilan</Label>
+          <Input
+            id="faq-order"
+            type="number"
+            bind:value={faqFormData.display_order}
+          />
+        </div>
+      </div>
+
+      <Dialog.Footer>
+        <Button variant="outline" onclick={() => (isFAQDialogOpen = false)}
+          >Batal</Button
+        >
+        <Button onclick={handleFAQSubmit} disabled={isSubmitting}>
+          {isSubmitting ? "Menyimpan..." : "Simpan"}
+        </Button>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog.Root>
+
   <div class="flex flex-col gap-4">
     <!-- FAQ Section -->
     <div class="space-y-4">
-      <h2 class="text-2xl font-semibold">
-        {#if helpStore.searchQuery}
-          Hasil Pencarian untuk "{helpStore.searchQuery}"
-        {:else if helpStore.selectedCategory}
-          {helpStore.categories.find((c) => c.id === helpStore.selectedCategory)?.name}
-        {:else}
-          Pertanyaan Umum (FAQ)
-        {/if}
-      </h2>
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">
+          {#if helpStore.searchQuery}
+            Hasil Pencarian untuk "{helpStore.searchQuery}"
+          {:else if helpStore.selectedCategory}
+            {helpStore.categories.find((c) => c.id === helpStore.selectedCategory)?.name}
+          {:else}
+            Pertanyaan Umum (FAQ)
+          {/if}
+        </h2>
+        <Button onclick={openCreateFAQDialog} class="flex items-center gap-2" disabled={helpStore.selectedCategory === null}>
+          <Plus class="size-4" />
+          Tambah FAQ
+        </Button>
+      </div>
 
       {#if helpStore.isLoading}
         <div
@@ -290,9 +408,29 @@
         <Accordion.Root type="single" class="w-full">
           {#each helpStore.faqs as faq, i}
             <Accordion.Item value="item-{i}">
-              <Accordion.Trigger class="text-left"
-                >{faq.question}</Accordion.Trigger
-              >
+              <Accordion.Trigger class="text-left relative group"
+                >{faq.question}
+                <div
+                  class="absolute top-1/2 -translate-y-1/2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    class="size-8"
+                    onclick={(e) => openEditFAQDialog(faq, e)}
+                  >
+                    <Pencil class="size-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    class="size-8"
+                    onclick={(e) => deleteFAQ(faq.id, e)}
+                  >
+                    <Trash2 class="size-4" />
+                  </Button>
+                </div>
+              </Accordion.Trigger>
               <Accordion.Content
                 class="text-muted-foreground leading-relaxed whitespace-pre-line"
               >
