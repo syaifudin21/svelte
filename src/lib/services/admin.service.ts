@@ -7,6 +7,11 @@ export const adminService = {
     return response.data;
   },
 
+  async getAdmin(id: string) {
+    const response = await api.get(`/api/admin/admins/${id}`);
+    return response.data;
+  },
+
   async getSummaryStatus(): Promise<AdminSummaryResponse> {
     const response = await api.get("/api/admin/admins/summary-status");
     return response.data;
@@ -23,6 +28,23 @@ export const adminService = {
     const response = await api.put(`/api/admin/admins/${adminUuid}/rejected`, {
       notes,
     });
+    return response.data;
+  },
+
+  async updateWorkArea(adminId: string, workAreaIds: string[]) {
+    const response = await api.post(`/api/admin/admins/${adminId}/work-area`, {
+      work_area_ids: workAreaIds,
+    });
+    return response.data;
+  },
+
+  async removeWorkArea(adminId: string, workAreaIds: string[]) {
+    const response = await api.post(
+      `/api/admin/admins/${adminId}/work-area/remove`,
+      {
+        work_area_ids: workAreaIds,
+      },
+    );
     return response.data;
   },
 };

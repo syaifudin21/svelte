@@ -1,3 +1,6 @@
+import { authService } from "$lib/services/auth.service";
+import { userService } from "$lib/services/user.service";
+
 export function createAuthStore() {
   let user = $state<any>(null);
   let token = $state<string | null>(
@@ -43,11 +46,30 @@ export function createAuthStore() {
       error = msg;
     },
 
+    async fetchProfile() {
+      isLoading = true;
+      try {
+        const response = await userService.getProfile();
+        user = response.data;
+      } catch (err) {
+        console.error("Failed to fetch profile:", err);
+        // Don't clear token on profile fetch failure unless 401 (handled by interceptor)
+      } finally {
+        isLoading = false;
+      }
+    },
+
     async logout() {
-      user = null;
-      token = null;
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
+      try {
+        await authService.logout();
+      } catch (err) {
+        console.error("Logout API call failed:", err);
+      } finally {
+        user = null;
+        token = null;
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+        }
       }
     },
   };

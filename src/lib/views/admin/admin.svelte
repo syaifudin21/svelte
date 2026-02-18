@@ -185,7 +185,10 @@
                       >
                     </Avatar.Root>
                     <div class="grid gap-0.5">
-                      <div class="font-medium">{admin.name}</div>
+                      <a
+                        href="/admin/{admin.id}"
+                        class="font-medium hover:underline">{admin.name}</a
+                      >
                       <div class="text-xs text-muted-foreground">
                         {admin.username}
                       </div>
