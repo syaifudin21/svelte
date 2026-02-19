@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import L from "leaflet";
-  import "leaflet/dist/leaflet.css";
+  import type L from "leaflet";
 
   interface Props {
     lat: number;
@@ -13,7 +12,10 @@
   let mapElement: HTMLElement;
   let map: L.Map;
 
-  onMount(() => {
+  onMount(async () => {
+    const L = await import("leaflet");
+    await import("leaflet/dist/leaflet.css");
+
     map = L.map(mapElement).setView([lat, lng], 15);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

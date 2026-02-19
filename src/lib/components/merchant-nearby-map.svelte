@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, untrack } from "svelte";
-  import L from "leaflet";
-  import "leaflet/dist/leaflet.css";
+  import type L from "leaflet";
   import type { NearbyMerchant } from "$lib/types/merchant";
 
   interface Props {
@@ -103,8 +102,11 @@
     if (marker) marker.openPopup();
   }
 
-  onMount(() => {
+  onMount(async () => {
     if (!mapElement) return;
+
+    const L = await import("leaflet");
+    await import("leaflet/dist/leaflet.css");
 
     // Fix for missing default marker icons in build - DO THIS FIRST
     const DefaultIcon = L.icon({
