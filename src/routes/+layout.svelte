@@ -12,6 +12,7 @@
   } from "$lib/stores/forbidden.svelte";
   import { onMount } from "svelte";
   import { getFcmToken, listenForMessages } from "$lib/utils/firebase";
+  import { deviceService } from "$lib/services/device.service";
 
   let { children } = $props();
 
@@ -22,6 +23,20 @@
       "Layout onMount: FCM Token retrieval finished. Token found:",
       !!token,
     );
+
+    if (token && typeof window !== "undefined") {
+      const authToken = localStorage.getItem("token");
+      if (authToken) {
+        console.log("Layout onMount: User is logged in, syncing FCM token...");
+        try {
+          await deviceService.updateFcmToken(token);
+          console.log("Layout onMount: FCM token sync successful");
+        } catch (err) {
+          console.error("Layout onMount: FCM token sync failed", err);
+        }
+      }
+    }
+
     listenForMessages();
   });
 </script>

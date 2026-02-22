@@ -20,6 +20,7 @@ export const authService = {
     code?: string;
     id_token?: string;
     fcm_token?: string;
+    device_info?: string;
   }) {
     const response = await api.post("/api/auth/google", data);
     return response.data;

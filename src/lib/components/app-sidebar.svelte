@@ -14,6 +14,7 @@
   import SearchIcon from "@tabler/icons-svelte/icons/search";
   import SettingsIcon from "@tabler/icons-svelte/icons/settings";
   import UsersIcon from "@tabler/icons-svelte/icons/users";
+  import BellIcon from "@tabler/icons-svelte/icons/bell";
   import NavDocuments from "./nav-documents.svelte";
   import NavMain from "./nav-main.svelte";
   import NavSecondary from "./nav-secondary.svelte";
@@ -89,6 +90,11 @@
         title: "Analytics",
         url: "#",
         icon: ChartBarIcon,
+      },
+      {
+        title: "Notification",
+        url: "/console/notifications",
+        icon: BellIcon,
       },
     ],
     navClouds: [

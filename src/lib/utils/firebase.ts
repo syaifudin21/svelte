@@ -101,6 +101,8 @@ export async function getFcmToken() {
   return null;
 }
 
+import { toast } from "svelte-sonner";
+
 export function listenForMessages() {
   if (typeof window === "undefined") return;
 
@@ -109,7 +111,34 @@ export function listenForMessages() {
     const messaging = getMessaging(app);
 
     onMessage(messaging, (payload) => {
-      console.log("FCM Message received in foreground:", payload);
+      console.log(
+        "FCM Message received in foreground:",
+        JSON.stringify(payload, null, 2),
+      );
+      if (payload.notification) {
+        console.log(
+          "Displaying foreground toast and system notification for:",
+          payload.notification.title,
+        );
+
+        // Show Toast
+        toast.success(payload.notification.title || "Notifikasi Baru", {
+          description: payload.notification.body,
+        });
+
+        // Show System Notification (if permission allowed)
+        if (Notification.permission === "granted") {
+          new Notification(payload.notification.title || "Notifikasi Baru", {
+            body: payload.notification.body,
+            icon: "/favicon.svg",
+          });
+        }
+      } else {
+        console.log(
+          "FCM Message received in foreground but has no notification payload. Data:",
+          payload.data,
+        );
+      }
     });
   } catch (error) {
     console.error("Error setting up FCM message listener:", error);

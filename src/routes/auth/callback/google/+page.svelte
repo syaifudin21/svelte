@@ -40,8 +40,16 @@
       const fcm_token = storedToken || "";
       console.log("Google Callback: Final fcm_token to be sent:", fcm_token);
 
+      function getDeviceInfo() {
+        return navigator.userAgent;
+      }
+
       // Send the code to the backend to get the token and user data
-      const response = await authService.loginWithGoogle({ code, fcm_token });
+      const response = await authService.loginWithGoogle({
+        code,
+        fcm_token,
+        device_info: getDeviceInfo(),
+      });
       console.log("Backend Google Login Response:", response);
 
       const token = response.data?.token;
