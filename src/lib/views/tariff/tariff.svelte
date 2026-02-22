@@ -97,7 +97,7 @@
         >Konfigurasi biaya per kilometer dan komisi.</Card.Description
       >
     </div>
-    <Button size="sm" onclick={() => goto("/tariff/change")}>
+    <Button size="sm" onclick={() => goto("/console/tariff/change")}>
       <Pencil class="mr-2 h-4 w-4" />
       Ubah Tarif
     </Button>

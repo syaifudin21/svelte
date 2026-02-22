@@ -68,13 +68,13 @@
         <DropdownMenu.Separator />
         <DropdownMenu.Group>
           <DropdownMenu.Item
-            onclick={() => (window.location.href = "/console/profile")}
+            onclick={() => (window.location.href = "/merchant/profile")}
           >
             <UserCircleIcon />
             Profil
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            onclick={() => (window.location.href = "/console/devices")}
+            onclick={() => (window.location.href = "/merchant/device")}
           >
             <DeviceLaptopIcon />
             Device

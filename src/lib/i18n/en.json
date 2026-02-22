@@ -144,5 +144,207 @@
         "email": "Email",
         "current_password": "Current Password",
         "new_password": "New Password"
+    },
+    "forbidden": {
+        "title": "Access Denied",
+        "description": "You do not have permission to access this resource. Please contact an administrator if you need access."
+    },
+    "merchant_registration": {
+        "title": "Merchant Registration",
+        "subtitle": "Complete 6 steps to register your merchant",
+        "steps": {
+            "step1": "Personal Info",
+            "step1_desc": "Registration data",
+            "step2": "Business Profile",
+            "step2_desc": "Merchant information",
+            "step3": "Documents",
+            "step3_desc": "Upload requirements",
+            "step4": "Bank Account",
+            "step4_desc": "Payment information",
+            "step5": "Products",
+            "step5_desc": "Product list",
+            "step6": "Confirm",
+            "step6_desc": "Review & submit"
+        },
+        "loading": "Loading data...",
+        "success": {
+            "title": "Registration Submitted Successfully!",
+            "description": "Thank you for registering. Our team will review your application and contact you within 1-3 business days.",
+            "back_to_dashboard": "Back to Dashboard"
+        },
+        "navigation": {
+            "back": "Back"
+        },
+        "pending_dialog": {
+            "title": "Registration Already Exists",
+            "description": "You already have a merchant registration pending approval.",
+            "merchant_name": "Merchant Name:",
+            "not_filled": "(Not filled)",
+            "continue_question": "Would you like to continue your existing registration?",
+            "cancel": "Cancel",
+            "continue": "Continue"
+        },
+        "submitted_dialog": {
+            "title": "Registration Under Verification",
+            "status": "Status:",
+            "waiting_verification": "Waiting for Verification",
+            "wait_time": "⏱️ Wait Time",
+            "wait_period": "3 x 24 Hours",
+            "wait_description": "Your registration will be verified within 3x24 hours. Our team will contact you via the registered email or phone number.",
+            "support_note": "If you don't hear from us after 3x24 hours, please contact our support.",
+            "understand": "Understand"
+        },
+        "step1": {
+            "title": "Personal Information",
+            "description": "Enter your personal information to start merchant registration",
+            "full_name": "Full Name",
+            "full_name_placeholder": "Enter your full name",
+            "email": "Email",
+            "email_placeholder": "example@email.com",
+            "phone": "Phone Number",
+            "phone_placeholder": "081234567890",
+            "province": "Province",
+            "select_province": "Select Province",
+            "regency": "Regency/City",
+            "select_regency": "Select Regency/City",
+            "select_province_first": "Select Province first",
+            "loading": "Loading...",
+            "area_note": "Select province and regency/city to determine your work area",
+            "submit": "Continue",
+            "processing": "Processing..."
+        },
+        "step2": {
+            "title": "Business Profile",
+            "description": "Complete your merchant business information",
+            "merchant_name": "Merchant Name",
+            "merchant_name_placeholder": "Example: Padang Food Stall",
+            "category": "Business Category",
+            "select_category": "Select category",
+            "address": "Complete Address",
+            "address_placeholder": "Enter your complete business address",
+            "latitude": "Latitude (Optional)",
+            "longitude": "Longitude (Optional)",
+            "contact_phone": "Business Phone Number",
+            "contact_phone_placeholder": "0215551234",
+            "operation_hours": "Operation Hours",
+            "operation_hours_note": "Select your business operation days",
+            "open": "Open:",
+            "close": "Close:",
+            "submit": "Continue",
+            "processing": "Processing...",
+            "categories": {
+                "food": "Food",
+                "mart": "Mart"
+            },
+            "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        },
+        "step3": {
+            "title": "Required Documents",
+            "description": "Upload documents required for verification",
+            "nik": "National ID Number (NIK)",
+            "nik_placeholder": "3201234567890001",
+            "ktp_photo": "ID Card Photo",
+            "ktp_photo_placeholder": "https://example.com/ktp.jpg",
+            "ktp_note": "Upload a clear and valid ID card photo",
+            "selfie": "Selfie with ID Card",
+            "selfie_placeholder": "https://example.com/selfie.jpg",
+            "selfie_note": "Upload a selfie holding your ID card",
+            "store_front": "Store Front Photo",
+            "store_front_placeholder": "https://example.com/store-front.jpg",
+            "store_front_note": "Upload a photo of the front of your store/business location",
+            "store_inside": "Store Interior Photo",
+            "store_inside_placeholder": "https://example.com/store-inside.jpg",
+            "store_inside_note": "Upload a photo of the interior of your store/business location",
+            "notes": {
+                "title": "Notes:",
+                "items": [
+                    "Ensure all photos are clear and not blurry",
+                    "Maximum file size 5MB per photo",
+                    "Supported file formats: JPG, PNG",
+                    "Ensure NIK matches the uploaded ID card"
+                ]
+            },
+            "submit": "Continue",
+            "processing": "Processing..."
+        },
+        "step4": {
+            "title": "Bank Account Information",
+            "description": "Enter bank account information for fund disbursement",
+            "bank": "Bank",
+            "select_bank": "Select bank",
+            "account_number": "Account Number",
+            "account_number_placeholder": "0123456789",
+            "account_holder": "Account Holder Name",
+            "account_holder_placeholder": "Name as on Passbook",
+            "account_holder_note": "Ensure name matches the bank account/passbook",
+            "important": {
+                "title": "Important:",
+                "items": [
+                    "Account must be in the merchant owner's name",
+                    "Ensure account number is active and valid",
+                    "Fund disbursement will be transferred to this account"
+                ]
+            },
+            "banks": {
+                "BCA": "Bank Central Asia (BCA)",
+                "BNI": "Bank Negara Indonesia (BNI)",
+                "BRI": "Bank Rakyat Indonesia (BRI)",
+                "MANDIRI": "Bank Mandiri",
+                "DANAMON": "Bank Danamon",
+                "PERMATA": "Bank Permata",
+                "CIMB": "CIMB Niaga",
+                "OCBC": "OCBC NISP",
+                "BTPN": "BTPN",
+                "BSI": "Bank Syariah Indonesia (BSI)"
+            },
+            "submit": "Continue",
+            "processing": "Processing..."
+        },
+        "step5": {
+            "title": "Product List",
+            "description": "Add products you sell (minimum 1 product)",
+            "product": "Product",
+            "product_name": "Product Name",
+            "product_name_placeholder": "Example: Special Fried Rice",
+            "description": "Description",
+            "description_placeholder": "Describe your product",
+            "price": "Price (Rp)",
+            "price_placeholder": "0",
+            "category": "Category",
+            "select_category": "Select category",
+            "categories": ["Food", "Beverage", "Snack", "Dessert", "Others"],
+            "image_url": "Product Image URL",
+            "image_url_placeholder": "https://example.com/product.jpg",
+            "is_available": "Available",
+            "add_product": "Add Another Product",
+            "tips": {
+                "title": "Tips:",
+                "items": [
+                    "Add at least 1 product to continue",
+                    "Use clear and attractive images",
+                    "Ensure price includes tax if applicable",
+                    "You can add more products after registration is complete"
+                ]
+            },
+            "submit": "Continue",
+            "processing": "Processing..."
+        },
+        "step6": {
+            "title": "Confirm & Submit",
+            "description": "Review the information you've entered and submit your registration",
+            "summary": "Registration Summary",
+            "personal_info": "Personal Information",
+            "business_profile": "Business Profile",
+            "documents": "Documents",
+            "bank_account": "Bank Account",
+            "products": "Products",
+            "declaration": {
+                "title": "Declaration",
+                "text": "I declare that all information provided is true and can be accounted for. I agree to comply with all applicable terms and requirements."
+            },
+            "submit": "Submit Registration",
+            "submitting": "Submitting...",
+            "verification_note": "After submission, your registration will be verified by our team. The verification process usually takes 1-3 business days."
+        }
     }
 }

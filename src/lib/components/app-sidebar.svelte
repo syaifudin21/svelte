@@ -31,17 +31,17 @@
     navMain: [
       {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/console/dashboard",
         icon: DashboardIcon,
       },
       {
         title: "Driver",
-        url: "/driver",
+        url: "/console/driver",
         icon: UsersIcon,
       },
       {
         title: "Admin",
-        url: "/admin",
+        url: "/console/admin",
         icon: UsersIcon,
       },
       {
@@ -51,7 +51,7 @@
         items: [
           {
             title: "Request",
-            url: "/wallet/request",
+            url: "/console/wallet/request",
           },
         ],
       },
@@ -62,11 +62,11 @@
         items: [
           {
             title: "Merchant Nearby",
-            url: "/merchant/nearby",
+            url: "/console/merchant/nearby",
           },
           {
             title: "List Merchant",
-            url: "/merchant",
+            url: "/console/merchant",
           },
         ],
       },
@@ -77,11 +77,11 @@
         items: [
           {
             title: "Daftar Tarif",
-            url: "/tariff",
+            url: "/console/tariff",
           },
           {
             title: "Cek Tarif",
-            url: "/tariff/check",
+            url: "/console/tariff/check",
           },
         ],
       },
@@ -142,12 +142,12 @@
     navSecondary: [
       {
         title: "Settings",
-        url: "/setting",
+        url: "/console/setting",
         icon: SettingsIcon,
       },
       {
         title: "Get Help",
-        url: "/help",
+        url: "/console/help",
         icon: HelpIcon,
       },
       {
@@ -159,7 +159,7 @@
     documents: [
       {
         name: "Data Library",
-        url: "/data-library",
+        url: "/console/data-library",
         icon: DatabaseIcon,
       },
       {

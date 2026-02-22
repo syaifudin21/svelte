@@ -71,7 +71,7 @@
               <span class="bg-primary/10 text-primary px-1.5 py-0.5 rounded">${m.category_name}</span>
               ${m.avg_rating ? `<span>⭐ ${m.avg_rating}</span>` : ""}
             </div>
-            <a href="/merchant/${m.uuid}" class="text-[10px] text-blue-600 hover:underline block font-medium">
+            <a href="/console/merchant/${m.uuid}" class="text-[10px] text-blue-600 hover:underline block font-medium">
               Lihat Detail →
             </a>
           </div>

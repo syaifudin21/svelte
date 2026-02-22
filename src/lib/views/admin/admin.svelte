@@ -186,7 +186,7 @@
                     </Avatar.Root>
                     <div class="grid gap-0.5">
                       <a
-                        href="/admin/{admin.id}"
+                        href="/console/admin/{admin.id}"
                         class="font-medium hover:underline">{admin.name}</a
                       >
                       <div class="text-xs text-muted-foreground">

@@ -40,13 +40,16 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     // Handle 401 Unauthorized - Token expired or invalid
+    // Skip redirect if this is a login request (login requests can return 401 legitimately)
     if (error.response?.status === 401) {
-      if (typeof window !== "undefined") {
+      const isLoginRequest = error.config?.url?.includes('/api/auth/login');
+      
+      if (!isLoginRequest && typeof window !== "undefined") {
         localStorage.removeItem("token");
         window.location.href = "/login";
       }
     }
-    
+
     // Handle 403 Forbidden - No access permission
     if (error.response?.status === 403) {
       if (typeof window !== "undefined") {
@@ -57,7 +60,7 @@ api.interceptors.response.use(
         );
       }
     }
-    
+
     return Promise.reject(error);
   },
 );

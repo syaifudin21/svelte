@@ -7,9 +7,20 @@
     import { authStore } from "$lib/stores/auth.svelte";
     import { goto } from "$app/navigation";
     import { toast } from "svelte-sonner";
+    import RoleSelectionDialog from "$lib/components/role-selection-dialog.svelte";
+    import * as AlertDialog from "$lib/components/ui/alert-dialog";
+    import { Eye, EyeOff } from "lucide-svelte";
 
     let username = $state("");
     let password = $state("");
+    let showPassword = $state(false);
+    let showRoleDialog = $state(false);
+    let showErrorDialog = $state(false);
+    let errorMessage = $state("");
+
+    function getDeviceInfo() {
+        return navigator.userAgent;
+    }
 
     async function handleLogin(e: SubmitEvent) {
         e.preventDefault();
@@ -17,12 +28,13 @@
         authStore.setError(null);
 
         try {
-            const response = await authService.login({ username, password });
-            
+            const deviceInfo = getDeviceInfo();
+            const response = await authService.login({ username, password, device_info: deviceInfo });
+
             // Extract according to provided structure: response.data.token and response.data.user
             const token = response.data?.token;
             const userData = response.data?.user;
-            
+
             if (!token || !userData) {
                 authStore.setError("Respon server tidak valid.");
                 return;
@@ -35,16 +47,18 @@
                 toast.error("Anda tidak memiliki izin untuk mengakses Dashboard Admin.");
                 return;
             }
-            
+
             // Set session
             authStore.setUser(userData);
             authStore.setToken(token);
-            
+
             toast.success(response.message || "Login berhasil!");
-            goto("/dashboard");
+            showRoleDialog = true;
         } catch (err: any) {
             const errorMsg = err.response?.data?.message || "Login failed. Please check your credentials.";
             authStore.setError(errorMsg);
+            errorMessage = errorMsg;
+            showErrorDialog = true;
         } finally {
             authStore.setLoading(false);
         }
@@ -101,14 +115,30 @@
 						</div>
                         <div class="grid gap-1">
 							<Label class="sr-only" for="password">Password</Label>
-							<Input
-								id="password"
-								placeholder="Password"
-								type="password"
-                                bind:value={password}
-                                required
-                                disabled={authStore.isLoading}
-							/>
+							<div class="relative">
+								<Input
+									id="password"
+									placeholder="Password"
+									type={showPassword ? "text" : "password"}
+									bind:value={password}
+									required
+									disabled={authStore.isLoading}
+								/>
+								<Button
+									type="button"
+									variant="ghost"
+									size="sm"
+									class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+									onclick={() => showPassword = !showPassword}
+									disabled={authStore.isLoading}
+								>
+									{#if showPassword}
+										<EyeOff class="h-4 w-4 text-muted-foreground" />
+									{:else}
+										<Eye class="h-4 w-4 text-muted-foreground" />
+									{/if}
+								</Button>
+							</div>
 						</div>
                         {#if authStore.error}
                             <p class="text-sm font-medium text-destructive">{authStore.error}</p>
@@ -152,6 +182,25 @@
 	</div>
 </div>
 
+<RoleSelectionDialog bind:open={showRoleDialog} />
+
+<!-- Error Dialog -->
+<AlertDialog.Root open={showErrorDialog}>
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Login Gagal</AlertDialog.Title>
+      <AlertDialog.Description>
+        {errorMessage}
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Action onclick={() => showErrorDialog = false}>
+        OK
+      </AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
 <div class="flex flex-col md:hidden min-h-screen items-center justify-center p-4">
     <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div class="flex flex-col space-y-2 text-center">
@@ -173,13 +222,28 @@
                     </div>
                     <div class="grid gap-1">
                         <Label class="sr-only" for="password-mobile">Password</Label>
-                        <Input
-                            id="password-mobile"
-                            placeholder="Password"
-                            type="password"
-                            bind:value={password}
-                            required
-                        />
+                        <div class="relative">
+                            <Input
+                                id="password-mobile"
+                                placeholder="Password"
+                                type={showPassword ? "text" : "password"}
+                                bind:value={password}
+                                required
+                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                class="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                                onclick={() => showPassword = !showPassword}
+                            >
+                                {#if showPassword}
+                                    <EyeOff class="h-4 w-4 text-muted-foreground" />
+                                {:else}
+                                    <Eye class="h-4 w-4 text-muted-foreground" />
+                                {/if}
+                            </Button>
+                        </div>
                     </div>
                     <Button type="submit" disabled={authStore.isLoading}>
                         {#if authStore.isLoading}

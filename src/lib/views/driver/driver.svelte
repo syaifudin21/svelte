@@ -174,7 +174,7 @@
               <Table.Row>
                 <Table.Cell>
                   <a
-                    href="/driver/{driver.uuid}"
+                    href="/console/driver/{driver.uuid}"
                     class="flex items-center gap-3 hover:underline"
                   >
                     <Avatar.Root class="h-9 w-9">

@@ -175,7 +175,7 @@
               <Table.Row>
                 <Table.Cell>
                   <a
-                    href="/merchant/{merchant.uuid}"
+                    href="/console/merchant/{merchant.uuid}"
                     class="flex items-center gap-3 hover:underline"
                   >
                     <Avatar.Root class="h-9 w-9">

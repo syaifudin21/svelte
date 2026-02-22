@@ -1,16 +1,17 @@
 import { writable } from "svelte/store";
+import { uiStore } from "./ui.svelte";
 
 export const forbiddenDialog = writable({
   open: false,
-  title: "Akses Ditolak",
-  description: "Anda tidak memiliki izin untuk mengakses resource ini. Silakan hubungi administrator jika Anda memerlukan akses.",
+  title: uiStore.t("forbidden.title"),
+  description: uiStore.t("forbidden.description"),
 });
 
 export function showForbiddenDialog(title?: string, description?: string) {
   forbiddenDialog.set({
     open: true,
-    title: title || "Akses Ditolak",
-    description: description || "Anda tidak memiliki izin untuk mengakses resource ini. Silakan hubungi administrator jika Anda memerlukan akses.",
+    title: title || uiStore.t("forbidden.title"),
+    description: description || uiStore.t("forbidden.description"),
   });
 }
 

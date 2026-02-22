@@ -246,12 +246,12 @@
         toast.success("Berhasil menyimpan semua tarif", {
           description: `${successCount} tarif berhasil disimpan`,
         });
-        goto("/tariff");
+        goto("/console/tariff");
       } else if (successCount > 0) {
         toast.warning("Sebagian tarif berhasil disimpan", {
           description: `${successCount} berhasil, ${failedCount} gagal: ${failedServices.join(", ")}`,
         });
-        goto("/tariff");
+        goto("/console/tariff");
       } else {
         toast.error("Gagal menyimpan tarif", {
           description: "Semua tarif gagal disimpan. Silakan coba lagi.",
@@ -470,7 +470,7 @@
         </div>
       </Card.Content>
       <Card.Footer class="flex justify-between">
-        <Button type="button" variant="outline" onclick={() => goto("/tariff")}>
+        <Button type="button" variant="outline" onclick={() => goto("/console/tariff")}>
           Batal
         </Button>
         <Button type="submit" disabled={isSubmitting || !selectedRegencyId}>

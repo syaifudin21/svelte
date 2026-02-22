@@ -144,5 +144,207 @@
         "email": "Email",
         "current_password": "Kata Sandi Saat Ini",
         "new_password": "Kata Sandi Baru"
+    },
+    "forbidden": {
+        "title": "Akses Ditolak",
+        "description": "Anda tidak memiliki izin untuk mengakses resource ini. Silakan hubungi administrator jika Anda memerlukan akses."
+    },
+    "merchant_registration": {
+        "title": "Pendaftaran Merchant",
+        "subtitle": "Lengkapi 6 langkah untuk mendaftarkan merchant Anda",
+        "steps": {
+            "step1": "Informasi Pribadi",
+            "step1_desc": "Data registrasi",
+            "step2": "Profil Bisnis",
+            "step2_desc": "Informasi merchant",
+            "step3": "Dokumen",
+            "step3_desc": "Upload persyaratan",
+            "step4": "Rekening Bank",
+            "step4_desc": "Informasi pembayaran",
+            "step5": "Produk",
+            "step5_desc": "Daftar produk",
+            "step6": "Konfirmasi",
+            "step6_desc": "Tinjau & kirim"
+        },
+        "loading": "Memuat data...",
+        "success": {
+            "title": "Pendaftaran Berhasil Dikirim!",
+            "description": "Terima kasih telah mendaftar. Tim kami akan meninjau pendaftaran Anda dan akan menghubungi Anda dalam 1-3 hari kerja.",
+            "back_to_dashboard": "Kembali ke Dashboard"
+        },
+        "navigation": {
+            "back": "Kembali"
+        },
+        "pending_dialog": {
+            "title": "Pendaftaran Sudah Ada",
+            "description": "Anda sudah memiliki pendaftaran merchant yang sedang menunggu persetujuan.",
+            "merchant_name": "Nama Merchant:",
+            "not_filled": "(Belum diisi)",
+            "continue_question": "Apakah Anda ingin melanjutkan pendaftaran yang sudah ada?",
+            "cancel": "Batal",
+            "continue": "Lanjutkan"
+        },
+        "submitted_dialog": {
+            "title": "Pendaftaran Sedang Diverifikasi",
+            "status": "Status:",
+            "waiting_verification": "Menunggu Verifikasi",
+            "wait_time": "⏱️ Waktu Tunggu",
+            "wait_period": "3 x 24 Jam",
+            "wait_description": "Pendaftaran Anda akan diverifikasi dalam waktu 3x24 jam. Tim kami akan menghubungi Anda melalui email atau nomor telepon yang terdaftar.",
+            "support_note": "Jika setelah 3x24 jam tidak ada kabar, silakan hubungi support kami.",
+            "understand": "Mengerti"
+        },
+        "step1": {
+            "title": "Informasi Pribadi",
+            "description": "Masukkan informasi pribadi Anda untuk memulai pendaftaran merchant",
+            "full_name": "Nama Lengkap",
+            "full_name_placeholder": "Masukkan nama lengkap",
+            "email": "Email",
+            "email_placeholder": "contoh@email.com",
+            "phone": "Nomor Telepon",
+            "phone_placeholder": "081234567890",
+            "province": "Provinsi",
+            "select_province": "Pilih Provinsi",
+            "regency": "Kabupaten/Kota",
+            "select_regency": "Pilih Kabupaten/Kota",
+            "select_province_first": "Pilih Provinsi terlebih dahulu",
+            "loading": "Loading...",
+            "area_note": "Pilih provinsi dan kabupaten/kota untuk menentukan area kerja Anda",
+            "submit": "Lanjutkan",
+            "processing": "Memproses..."
+        },
+        "step2": {
+            "title": "Profil Bisnis",
+            "description": "Lengkapi informasi bisnis merchant Anda",
+            "merchant_name": "Nama Merchant",
+            "merchant_name_placeholder": "Contoh: Warung Makan Padang",
+            "category": "Kategori Bisnis",
+            "select_category": "Pilih kategori",
+            "address": "Alamat Lengkap",
+            "address_placeholder": "Masukkan alamat lengkap bisnis Anda",
+            "latitude": "Latitude (Opsional)",
+            "longitude": "Longitude (Opsional)",
+            "contact_phone": "Nomor Telepon Bisnis",
+            "contact_phone_placeholder": "0215551234",
+            "operation_hours": "Jam Operasional",
+            "operation_hours_note": "Pilih hari operasional bisnis Anda",
+            "open": "Buka:",
+            "close": "Tutup:",
+            "submit": "Lanjutkan",
+            "processing": "Memproses...",
+            "categories": {
+                "food": "Food",
+                "mart": "Mart"
+            },
+            "days": ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
+        },
+        "step3": {
+            "title": "Dokumen Persyaratan",
+            "description": "Upload dokumen-dokumen yang diperlukan untuk verifikasi",
+            "nik": "Nomor Induk Kependudukan (NIK)",
+            "nik_placeholder": "3201234567890001",
+            "ktp_photo": "Foto KTP",
+            "ktp_photo_placeholder": "https://example.com/ktp.jpg",
+            "ktp_note": "Upload foto KTP yang jelas dan masih berlaku",
+            "selfie": "Foto Selfie dengan KTP",
+            "selfie_placeholder": "https://example.com/selfie.jpg",
+            "selfie_note": "Upload foto selfie memegang KTP",
+            "store_front": "Foto Depan Toko",
+            "store_front_placeholder": "https://example.com/toko-depan.jpg",
+            "store_front_note": "Upload foto tampak depan toko/lokasi bisnis",
+            "store_inside": "Foto Dalam Toko",
+            "store_inside_placeholder": "https://example.com/toko-dalam.jpg",
+            "store_inside_note": "Upload foto bagian dalam toko/lokasi bisnis",
+            "notes": {
+                "title": "Catatan:",
+                "items": [
+                    "Pastikan semua foto jelas dan tidak buram",
+                    "Ukuran file maksimal 5MB per foto",
+                    "Format file yang didukung: JPG, PNG",
+                    "Pastikan NIK sesuai dengan KTP yang diupload"
+                ]
+            },
+            "submit": "Lanjutkan",
+            "processing": "Memproses..."
+        },
+        "step4": {
+            "title": "Informasi Rekening Bank",
+            "description": "Masukkan informasi rekening bank untuk pencairan dana",
+            "bank": "Bank",
+            "select_bank": "Pilih bank",
+            "account_number": "Nomor Rekening",
+            "account_number_placeholder": "0123456789",
+            "account_holder": "Nama Pemilik Rekening",
+            "account_holder_placeholder": "Nama Sesuai Buku Tabungan",
+            "account_holder_note": "Pastikan nama sesuai dengan buku tabungan/rekening",
+            "important": {
+                "title": "Penting:",
+                "items": [
+                    "Rekening harus atas nama pemilik merchant",
+                    "Pastikan nomor rekening aktif dan valid",
+                    "Pencairan dana akan ditransfer ke rekening ini"
+                ]
+            },
+            "banks": {
+                "BCA": "Bank Central Asia (BCA)",
+                "BNI": "Bank Negara Indonesia (BNI)",
+                "BRI": "Bank Rakyat Indonesia (BRI)",
+                "MANDIRI": "Bank Mandiri",
+                "DANAMON": "Bank Danamon",
+                "PERMATA": "Bank Permata",
+                "CIMB": "CIMB Niaga",
+                "OCBC": "OCBC NISP",
+                "BTPN": "BTPN",
+                "BSI": "Bank Syariah Indonesia (BSI)"
+            },
+            "submit": "Lanjutkan",
+            "processing": "Memproses..."
+        },
+        "step5": {
+            "title": "Daftar Produk",
+            "description": "Tambahkan produk yang Anda jual (minimal 1 produk)",
+            "product": "Produk",
+            "product_name": "Nama Produk",
+            "product_name_placeholder": "Contoh: Nasi Goreng Spesial",
+            "description": "Deskripsi",
+            "description_placeholder": "Deskripsi produk Anda",
+            "price": "Harga (Rp)",
+            "price_placeholder": "0",
+            "category": "Kategori",
+            "select_category": "Pilih kategori",
+            "categories": ["Makanan", "Minuman", "Snack", "Dessert", "Lainnya"],
+            "image_url": "URL Gambar Produk",
+            "image_url_placeholder": "https://example.com/product.jpg",
+            "is_available": "Tersedia",
+            "add_product": "Tambah Produk Lain",
+            "tips": {
+                "title": "Tips:",
+                "items": [
+                    "Tambahkan minimal 1 produk untuk melanjutkan",
+                    "Gunakan gambar yang jelas dan menarik",
+                    "Pastikan harga sudah termasuk pajak jika ada",
+                    "Anda dapat menambah produk lagi setelah pendaftaran selesai"
+                ]
+            },
+            "submit": "Lanjutkan",
+            "processing": "Memproses..."
+        },
+        "step6": {
+            "title": "Konfirmasi & Kirim",
+            "description": "Tinjau kembali informasi yang telah diisi dan kirimkan pendaftaran Anda",
+            "summary": "Ringkasan Pendaftaran",
+            "personal_info": "Informasi Pribadi",
+            "business_profile": "Profil Bisnis",
+            "documents": "Dokumen",
+            "bank_account": "Rekening Bank",
+            "products": "Produk",
+            "declaration": {
+                "title": "Pernyataan",
+                "text": "Saya menyatakan bahwa seluruh informasi yang saya berikan adalah benar dan dapat dipertanggungjawabkan. Saya bersedia mematuhi semua ketentuan dan persyaratan yang berlaku."
+            },
+            "submit": "Kirim Pendaftaran",
+            "submitting": "Mengirim...",
+            "verification_note": "Setelah dikirim, pendaftaran Anda akan diverifikasi oleh tim kami. Proses verifikasi biasanya memakan waktu 1-3 hari kerja."
+        }
     }
 }
