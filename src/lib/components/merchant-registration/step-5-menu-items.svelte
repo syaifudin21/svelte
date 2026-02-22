@@ -5,7 +5,12 @@
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "$lib/components/ui/card";
   import { Textarea } from "$lib/components/ui/textarea";
   import { Trash2, Plus } from "lucide-svelte";
+  import FileUploadDialog from "$lib/components/file-upload-dialog.svelte";
+  import { fileService } from "$lib/services/file.service";
   import { merchantRegistrationStore } from "$lib/stores/merchant-registration.svelte";
+  import UploadIcon from "@tabler/icons-svelte/icons/upload";
+  import EyeIcon from "@tabler/icons-svelte/icons/eye";
+  import type { FileData } from "$lib/services/file.service";
 
   // Local type without merchant_uuid (will be added by store)
   type MenuItemInput = {
@@ -43,8 +48,18 @@
   );
 
   let errors = $state<Record<number, Record<string, string>>>({});
+  let uploadDialogs = $state<Record<number, boolean>>({});
 
   const categories = ["Makanan", "Minuman", "Snack", "Dessert", "Lainnya"];
+
+  function openUploadDialog(index: number) {
+    uploadDialogs[index] = true;
+  }
+
+  function handleFileSelect(index: number, file: FileData) {
+    const url = fileService.getFileUrl(file.path);
+    updateMenuItem(index, "image_url", url);
+  }
 
   function addMenuItem() {
     menuItems = [
@@ -222,15 +237,28 @@
 
           <div class="space-y-2">
             <Label for="image_url_{index}">URL Gambar Produk</Label>
-            <Input
-              id="image_url_{index}"
-              type="url"
-              placeholder="https://example.com/product.jpg"
-              value={item.image_url}
-              oninput={(e) => updateMenuItem(index, "image_url", e.currentTarget.value)}
-              disabled={isLoading}
-              class={errors[index]?.image_url ? "border-destructive" : ""}
-            />
+            <div class="flex gap-2">
+              <Input
+                id="image_url_{index}"
+                type="text"
+                placeholder="Pilih file atau upload..."
+                value={item.image_url}
+                oninput={(e) => updateMenuItem(index, "image_url", e.currentTarget.value)}
+                disabled={isLoading}
+                class={errors[index]?.image_url ? "border-destructive" : ""}
+                readonly
+              />
+              <Button type="button" variant="outline" onclick={() => openUploadDialog(index)} disabled={isLoading}>
+                <UploadIcon class="h-4 w-4" />
+              </Button>
+              {#if item.image_url}
+                <a href={item.image_url} target="_blank">
+                  <Button type="button" variant="outline" disabled={isLoading}>
+                    <EyeIcon class="h-4 w-4" />
+                  </Button>
+                </a>
+              {/if}
+            </div>
             {#if errors[index]?.image_url}
               <p class="text-sm text-destructive">{errors[index].image_url}</p>
             {/if}
@@ -280,5 +308,15 @@
         {/if}
       </Button>
     </div>
+
+    {#each menuItems as item, index}
+      <FileUploadDialog
+        open={uploadDialogs[index]}
+        title="Upload Gambar Produk"
+        description="Upload gambar produk atau pilih dari file yang sudah ada"
+        defaultFileName={item.name || "produk"}
+        onFileSelect={(file) => handleFileSelect(index, file)}
+      />
+    {/each}
   </CardContent>
 </Card>

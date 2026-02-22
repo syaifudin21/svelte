@@ -5,6 +5,7 @@
   import DatabaseIcon from "@tabler/icons-svelte/icons/database";
   import FileAiIcon from "@tabler/icons-svelte/icons/file-ai";
   import FileDescriptionIcon from "@tabler/icons-svelte/icons/file-description";
+  import FileIcon from "@tabler/icons-svelte/icons/file";
   import FileWordIcon from "@tabler/icons-svelte/icons/file-word";
   import FolderIcon from "@tabler/icons-svelte/icons/folder";
   import HelpIcon from "@tabler/icons-svelte/icons/help";
@@ -95,6 +96,11 @@
         title: "Notification",
         url: "/console/notifications",
         icon: BellIcon,
+      },
+      {
+        title: "Files",
+        url: "/console/files",
+        icon: FileIcon,
       },
     ],
     navClouds: [

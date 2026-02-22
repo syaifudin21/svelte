@@ -3,7 +3,13 @@
   import { Input } from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "$lib/components/ui/card";
+  import FileUploadDialog from "$lib/components/file-upload-dialog.svelte";
+  import { fileService } from "$lib/services/file.service";
   import { merchantRegistrationStore } from "$lib/stores/merchant-registration.svelte";
+  import UploadIcon from "@tabler/icons-svelte/icons/upload";
+  import FileIcon from "@tabler/icons-svelte/icons/file";
+  import EyeIcon from "@tabler/icons-svelte/icons/eye";
+  import type { FileData } from "$lib/services/file.service";
 
   type FormValues = {
     id_card_number: string;
@@ -23,6 +29,12 @@
   let storeInsideImage = $state(merchantRegistrationStore.data.store_inside_image || "");
 
   let errors = $state<Record<string, string>>({});
+
+  // Dialog states
+  let idCardDialogOpen = $state(false);
+  let selfieDialogOpen = $state(false);
+  let storeFrontDialogOpen = $state(false);
+  let storeInsideDialogOpen = $state(false);
 
   function validateUrl(url: string): boolean {
     if (!url.trim()) return false;
@@ -70,6 +82,24 @@
     return Object.keys(errors).length === 0;
   }
 
+  function handleFileSelect(field: string, file: FileData) {
+    const url = fileService.getFileUrl(file.path);
+    switch (field) {
+      case 'id_card':
+        idCardImage = url;
+        break;
+      case 'selfie':
+        selfieImage = url;
+        break;
+      case 'store_front':
+        storeFrontImage = url;
+        break;
+      case 'store_inside':
+        storeInsideImage = url;
+        break;
+    }
+  }
+
   async function handleSubmit(e: Event) {
     e.preventDefault();
     if (validate()) {
@@ -111,14 +141,27 @@
 
       <div class="space-y-2">
         <Label for="id_card_image">Foto KTP</Label>
-        <Input
-          id="id_card_image"
-          type="url"
-          placeholder="https://example.com/ktp.jpg"
-          bind:value={idCardImage}
-          disabled={isLoading}
-          class={errors.id_card_image ? "border-destructive" : ""}
-        />
+        <div class="flex gap-2">
+          <Input
+            id="id_card_image"
+            type="text"
+            placeholder="Pilih file atau upload..."
+            bind:value={idCardImage}
+            disabled={isLoading}
+            class={errors.id_card_image ? "border-destructive" : ""}
+            readonly
+          />
+          <Button type="button" variant="outline" onclick={() => idCardDialogOpen = true} disabled={isLoading}>
+            <UploadIcon class="h-4 w-4" />
+          </Button>
+          {#if idCardImage}
+            <a href={idCardImage} target="_blank">
+              <Button type="button" variant="outline" disabled={isLoading}>
+                <EyeIcon class="h-4 w-4" />
+              </Button>
+            </a>
+          {/if}
+        </div>
         {#if errors.id_card_image}
           <p class="text-sm text-destructive">{errors.id_card_image}</p>
         {/if}
@@ -127,14 +170,27 @@
 
       <div class="space-y-2">
         <Label for="selfie_image">Foto Selfie dengan KTP</Label>
-        <Input
-          id="selfie_image"
-          type="url"
-          placeholder="https://example.com/selfie.jpg"
-          bind:value={selfieImage}
-          disabled={isLoading}
-          class={errors.selfie_image ? "border-destructive" : ""}
-        />
+        <div class="flex gap-2">
+          <Input
+            id="selfie_image"
+            type="text"
+            placeholder="Pilih file atau upload..."
+            bind:value={selfieImage}
+            disabled={isLoading}
+            class={errors.selfie_image ? "border-destructive" : ""}
+            readonly
+          />
+          <Button type="button" variant="outline" onclick={() => selfieDialogOpen = true} disabled={isLoading}>
+            <UploadIcon class="h-4 w-4" />
+          </Button>
+          {#if selfieImage}
+            <a href={selfieImage} target="_blank">
+              <Button type="button" variant="outline" disabled={isLoading}>
+                <EyeIcon class="h-4 w-4" />
+              </Button>
+            </a>
+          {/if}
+        </div>
         {#if errors.selfie_image}
           <p class="text-sm text-destructive">{errors.selfie_image}</p>
         {/if}
@@ -143,14 +199,27 @@
 
       <div class="space-y-2">
         <Label for="store_front_image">Foto Depan Toko</Label>
-        <Input
-          id="store_front_image"
-          type="url"
-          placeholder="https://example.com/toko-depan.jpg"
-          bind:value={storeFrontImage}
-          disabled={isLoading}
-          class={errors.store_front_image ? "border-destructive" : ""}
-        />
+        <div class="flex gap-2">
+          <Input
+            id="store_front_image"
+            type="text"
+            placeholder="Pilih file atau upload..."
+            bind:value={storeFrontImage}
+            disabled={isLoading}
+            class={errors.store_front_image ? "border-destructive" : ""}
+            readonly
+          />
+          <Button type="button" variant="outline" onclick={() => storeFrontDialogOpen = true} disabled={isLoading}>
+            <UploadIcon class="h-4 w-4" />
+          </Button>
+          {#if storeFrontImage}
+            <a href={storeFrontImage} target="_blank">
+              <Button type="button" variant="outline" disabled={isLoading}>
+                <EyeIcon class="h-4 w-4" />
+              </Button>
+            </a>
+          {/if}
+        </div>
         {#if errors.store_front_image}
           <p class="text-sm text-destructive">{errors.store_front_image}</p>
         {/if}
@@ -159,14 +228,27 @@
 
       <div class="space-y-2">
         <Label for="store_inside_image">Foto Dalam Toko</Label>
-        <Input
-          id="store_inside_image"
-          type="url"
-          placeholder="https://example.com/toko-dalam.jpg"
-          bind:value={storeInsideImage}
-          disabled={isLoading}
-          class={errors.store_inside_image ? "border-destructive" : ""}
-        />
+        <div class="flex gap-2">
+          <Input
+            id="store_inside_image"
+            type="text"
+            placeholder="Pilih file atau upload..."
+            bind:value={storeInsideImage}
+            disabled={isLoading}
+            class={errors.store_inside_image ? "border-destructive" : ""}
+            readonly
+          />
+          <Button type="button" variant="outline" onclick={() => storeInsideDialogOpen = true} disabled={isLoading}>
+            <UploadIcon class="h-4 w-4" />
+          </Button>
+          {#if storeInsideImage}
+            <a href={storeInsideImage} target="_blank">
+              <Button type="button" variant="outline" disabled={isLoading}>
+                <EyeIcon class="h-4 w-4" />
+              </Button>
+            </a>
+          {/if}
+        </div>
         {#if errors.store_inside_image}
           <p class="text-sm text-destructive">{errors.store_inside_image}</p>
         {/if}
@@ -193,4 +275,36 @@
       </Button>
     </form>
   </CardContent>
+
+  <FileUploadDialog
+    open={idCardDialogOpen}
+    title="Upload Foto KTP"
+    description="Upload foto KTP atau pilih dari file yang sudah ada"
+    defaultFileName="ktp"
+    onFileSelect={(file) => handleFileSelect('id_card', file)}
+  />
+
+  <FileUploadDialog
+    open={selfieDialogOpen}
+    title="Upload Foto Selfie"
+    description="Upload foto selfie dengan KTP atau pilih dari file yang sudah ada"
+    defaultFileName="selfie-ktp"
+    onFileSelect={(file) => handleFileSelect('selfie', file)}
+  />
+
+  <FileUploadDialog
+    open={storeFrontDialogOpen}
+    title="Upload Foto Depan Toko"
+    description="Upload foto depan toko atau pilih dari file yang sudah ada"
+    defaultFileName="depan-toko"
+    onFileSelect={(file) => handleFileSelect('store_front', file)}
+  />
+
+  <FileUploadDialog
+    open={storeInsideDialogOpen}
+    title="Upload Foto Dalam Toko"
+    description="Upload foto dalam toko atau pilih dari file yang sudah ada"
+    defaultFileName="dalam-toko"
+    onFileSelect={(file) => handleFileSelect('store_inside', file)}
+  />
 </Card>
