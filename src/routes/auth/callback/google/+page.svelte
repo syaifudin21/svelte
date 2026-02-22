@@ -31,8 +31,17 @@
     console.log("Google OAuth Code receiver:", code);
     authStore.setLoading(true);
     try {
+      const storedToken = localStorage.getItem("fcm_token");
+      console.log(
+        "Google Callback: Stored fcm_token in localStorage:",
+        storedToken,
+      );
+
+      const fcm_token = storedToken || "";
+      console.log("Google Callback: Final fcm_token to be sent:", fcm_token);
+
       // Send the code to the backend to get the token and user data
-      const response = await authService.loginWithGoogle({ code });
+      const response = await authService.loginWithGoogle({ code, fcm_token });
       console.log("Backend Google Login Response:", response);
 
       const token = response.data?.token;

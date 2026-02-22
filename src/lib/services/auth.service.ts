@@ -6,12 +6,21 @@ export const authService = {
     return response.data;
   },
 
-  async login(credentials: any) {
+  async login(credentials: {
+    username?: string;
+    password?: string;
+    fcm_token?: string;
+    device_info?: string;
+  }) {
     const response = await api.post("/api/auth/login", credentials);
     return response.data;
   },
 
-  async loginWithGoogle(data: { code?: string; id_token?: string }) {
+  async loginWithGoogle(data: {
+    code?: string;
+    id_token?: string;
+    fcm_token?: string;
+  }) {
     const response = await api.post("/api/auth/google", data);
     return response.data;
   },

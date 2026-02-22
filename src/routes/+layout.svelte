@@ -1,30 +1,45 @@
 <script lang="ts">
-	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
-	import { Button } from "$lib/components/ui/button";
-	import { page } from "$app/stores";
-	import { Toaster } from "$lib/components/ui/sonner";
-	import { ModeWatcher } from "mode-watcher";
-	import ForbiddenDialog from "$lib/components/forbidden-dialog.svelte";
-	import { forbiddenDialog, closeForbiddenDialog } from "$lib/stores/forbidden.svelte";
+  import "./layout.css";
+  import favicon from "$lib/assets/favicon.svg";
+  import { Button } from "$lib/components/ui/button";
+  import { page } from "$app/stores";
+  import { Toaster } from "$lib/components/ui/sonner";
+  import { ModeWatcher } from "mode-watcher";
+  import ForbiddenDialog from "$lib/components/forbidden-dialog.svelte";
+  import {
+    forbiddenDialog,
+    closeForbiddenDialog,
+  } from "$lib/stores/forbidden.svelte";
+  import { onMount } from "svelte";
+  import { getFcmToken, listenForMessages } from "$lib/utils/firebase";
 
-	let { children } = $props();
+  let { children } = $props();
+
+  onMount(async () => {
+    console.log("Layout onMount: Initializing FCM...");
+    const token = await getFcmToken();
+    console.log(
+      "Layout onMount: FCM Token retrieval finished. Token found:",
+      !!token,
+    );
+    listenForMessages();
+  });
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+  <link rel="icon" href={favicon} />
 </svelte:head>
 
 <div class="relative flex min-h-screen flex-col bg-background text-foreground">
-	<main class="flex-1">
-		{@render children()}
-	</main>
-	<Toaster />
-	<ModeWatcher />
+  <main class="flex-1">
+    {@render children()}
+  </main>
+  <Toaster />
+  <ModeWatcher />
 </div>
 
-<ForbiddenDialog 
-  open={$forbiddenDialog.open} 
+<ForbiddenDialog
+  open={$forbiddenDialog.open}
   title={$forbiddenDialog.title}
   description={$forbiddenDialog.description}
   onClose={closeForbiddenDialog}

@@ -45,6 +45,7 @@
 		"@tabler/icons-svelte": "^3.36.1",
 		"@tanstack/table-core": "^8.21.3",
 		"axios": "^1.13.4",
+		"firebase": "^12.9.0",
 		"leaflet": "^1.9.4",
 		"lucide-svelte": "^0.563.0",
 		"zod": "^4.3.6"
