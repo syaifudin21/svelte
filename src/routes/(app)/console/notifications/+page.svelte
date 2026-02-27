@@ -1,5 +1,7 @@
 <script lang="ts">
   import { notificationService } from "$lib/services/notification.service";
+  import { userService } from "$lib/services/user.service";
+  import type { User } from "$lib/types/user";
   import * as Card from "$lib/components/ui/card/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
@@ -9,7 +11,9 @@
   import { onMount } from "svelte";
   import { getFcmToken } from "$lib/utils/firebase";
   import { deviceService } from "$lib/services/device.service";
+  import { clickOutside } from "$lib/hooks/click-outside.svelte";
 
+  let singleUser = $state<User | null>(null);
   let singleUserId = $state("");
   let singleTitle = $state("");
   let singleBody = $state("");
@@ -20,6 +24,14 @@
 
   let currentFcmToken = $state("");
 
+  let searchQuery = $state("");
+  let searchResults = $state<User[]>([]);
+  let isSearching = $state(false);
+  let searchOpen = $state(false);
+  let searchContainer: HTMLDivElement;
+
+  let searchTimeout: ReturnType<typeof setTimeout>;
+
   onMount(() => {
     currentFcmToken = localStorage.getItem("fcm_token") || "Token not found";
   });
@@ -27,6 +39,43 @@
   let isLoadingSingle = $state(false);
   let isLoadingBulk = $state(false);
   let isLoadingTest = $state(false);
+
+  function debouncedSearch(query: string) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchUsers(query);
+    }, 300);
+  }
+
+  async function searchUsers(query: string) {
+    if (!query || query.length < 2) {
+      searchResults = [];
+      return;
+    }
+
+    isSearching = true;
+    try {
+      const res = await userService.searchUsers({ search: query, per_page: 10 });
+      searchResults = res.data.items || [];
+    } catch (error: any) {
+      console.error("Search error:", error);
+      searchResults = [];
+    } finally {
+      isSearching = false;
+    }
+  }
+
+  function handleUserSelect(user: User) {
+    singleUser = user;
+    singleUserId = String(user.id);
+    searchOpen = false;
+    searchQuery = `${user.username} (${user.email})`;
+    searchResults = [];
+  }
+
+  function closeSearch() {
+    searchOpen = false;
+  }
 
   async function handleSendToUser() {
     if (!singleUserId || !singleTitle || !singleBody) {
@@ -46,8 +95,10 @@
           `${res.message} (Sent: ${res.data.sent}/${res.data.total})`,
         );
         singleUserId = "";
+        singleUser = null;
         singleTitle = "";
         singleBody = "";
+        searchQuery = "";
       } else {
         toast.warning(
           `Gagal! ${res.message} (Sent: 0). User mungkin tidak punya perangkat terdaftar.`,
@@ -183,13 +234,90 @@
           </Card.Header>
           <Card.Content class="space-y-4">
             <div class="space-y-2">
-              <Label for="userId">User ID</Label>
-              <Input
-                id="userId"
-                type="number"
-                placeholder="102"
-                bind:value={singleUserId}
-              />
+              <Label for="userId">User</Label>
+              <div class="relative" use:clickOutside={closeSearch}>
+                <Input
+                  id="userId"
+                  placeholder="Search user by username or email..."
+                  bind:value={searchQuery}
+                  oninput={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    searchQuery = target.value;
+                    debouncedSearch(target.value);
+                    searchOpen = true;
+                  }}
+                  onfocus={() => {
+                    if (searchQuery.length >= 2 && searchResults.length > 0) {
+                      searchOpen = true;
+                    }
+                  }}
+                />
+                {#if singleUser}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    class="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onclick={() => {
+                      singleUser = null;
+                      singleUserId = "";
+                      searchQuery = "";
+                      searchResults = [];
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="text-muted-foreground"
+                    >
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
+                  </Button>
+                {/if}
+
+                {#if searchOpen && (isSearching || searchResults.length > 0)}
+                  <div
+                    class="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-md max-h-64 overflow-auto"
+                  >
+                    {#if isSearching}
+                      <div class="flex items-center justify-center py-4">
+                        <span class="text-sm text-muted-foreground">
+                          Searching...
+                        </span>
+                      </div>
+                    {:else}
+                      {#each searchResults as user (user.id)}
+                        <button
+                          class="w-full px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground outline-none transition-colors"
+                          onclick={() => handleUserSelect(user)}
+                        >
+                          <div class="flex flex-col gap-0.5">
+                            <span class="font-medium">{user.username}</span>
+                            <span class="text-xs text-muted-foreground">
+                              {user.email}
+                            </span>
+                          </div>
+                        </button>
+                      {/each}
+                    {/if}
+                  </div>
+                {/if}
+              </div>
+              <p class="text-xs text-muted-foreground">
+                Type at least 2 characters to search (e.g., username or email)
+              </p>
+              {#if singleUser}
+                <p class="text-xs text-green-600 dark:text-green-400">
+                  Selected: {singleUser.username} ({singleUser.email})
+                </p>
+              {/if}
             </div>
             <div class="space-y-2">
               <Label for="title">Title</Label>

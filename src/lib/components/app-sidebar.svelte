@@ -98,6 +98,11 @@
         icon: BellIcon,
       },
       {
+        title: "Users",
+        url: "/console/users",
+        icon: UsersIcon,
+      },
+      {
         title: "Files",
         url: "/console/files",
         icon: FileIcon,
